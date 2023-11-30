@@ -20,6 +20,10 @@
     ],
     "paths": {
       "@/app/*": ["./src/app/*"],
+      "@/layouts/*": ["./src/layouts/*"],
+      "@/entities/*": ["./src/entities/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/widgets/*": ["./src/widgets/*"],
       "@/*": ["./src/*"]
     }
   },
