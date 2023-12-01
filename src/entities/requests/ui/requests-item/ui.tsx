@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  As,
-  Card,
-  Checkbox,
-  Grid,
-  GridItem,
-  HStack,
-  Stack,
-  Tag,
-  Text,
-} from '@chakra-ui/react';
+import { As, Card, Checkbox, HStack, Stack, Tag, Text } from '@chakra-ui/react';
 import { Icon } from '@chakra-ui/react';
 import {
   IoPeopleOutline,
@@ -18,6 +8,7 @@ import {
   IoFemaleOutline,
 } from 'react-icons/io5';
 import { SiNestjs } from 'react-icons/si';
+import { BadgeStatus } from '@/shared/ui/badge-status';
 
 const iconStyle = { color: '#2c3558', boxSize: 5 };
 const textStyle = { color: '#797eb3', fontSize: 'sm' };
@@ -59,9 +50,12 @@ export const RequestsItem = () => {
                 Сеть каналов СНГ
               </Text>
             </HStack>
-            <Text as="b" color="#1b2559" fontSize="lg">
-              Все о путешествиях
-            </Text>
+            <Stack direction={['column', 'column', 'row']}>
+              <Text as="b" color="#1b2559" fontSize="lg">
+                Все о путешествиях
+              </Text>
+              <BadgeStatus type="on_check">На проверке</BadgeStatus>
+            </Stack>
           </Stack>
           <HStack flexWrap="wrap">
             <Tag whiteSpace="nowrap">РФ</Tag>
