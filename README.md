@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align='center'>Тестовое задание в Bolt System</h1>
 
-## Getting Started
+1. Этап 1:
+    - [x] Создана ветка feature/stage-1 от main.
+    - [x] Сверстана страница (макет: [ссылка №1](https://prnt.sc/5JwZISw3WimW)
+      , [ссылка №2](https://prnt.sc/5TcJ8j2jfBCQ), [ссылка №3](https://prnt.sc/qGn0H9OejQnV)). Для стилей и разметки использовался только Chakra UI.
+    - [x] В списке присутствуют 10 элементов (одинаковых).
+    - [x] Результат приложен в виде скриншотов в корень проекта, и добавлены 
+      ссылки в README.
+    - [x] Ветка feature/stage-1 смержена в main.
 
-First, run the development server:
+### Скриншоты:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<details>
+   <summary>Этап 1</summary>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   <details>
+      <summary>Мобильная версия</summary>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ![Мобильная версия](/docs/screenshots/stage-1/mobile.png)
+   </details>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   <details>
+      <summary>Десктоп версия</summary>
 
-## Learn More
+   ![Десктоп](/docs/screenshots/stage-1/desktop.png)
+   </details>
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+</details>
