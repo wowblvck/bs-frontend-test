@@ -2,11 +2,37 @@
 
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import Link from 'next/link';
-import { Icon } from '@chakra-ui/react';
+import { Icon, Text } from '@chakra-ui/react';
 import { MdChevronRight } from 'react-icons/md';
 import React from 'react';
+import { usePathname } from 'next/navigation';
+
+const routes = [
+  {
+    title: 'Главная',
+    href: '/',
+  },
+  {
+    title: 'Рекламодателям',
+    href: '/advertisers',
+  },
+  {
+    title: 'Заказы',
+    href: '/advertisers/orders',
+  },
+  {
+    title: 'Заказ',
+    href: '/advertisers/orders/2',
+  },
+  {
+    title: 'Заявки',
+    href: '/advertisers/orders/2/requests',
+  },
+];
 
 export const Menu = () => {
+  const pathname = usePathname();
+
   return (
     <Breadcrumb
       spacing="8px"
@@ -20,33 +46,23 @@ export const Menu = () => {
         />
       }
     >
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} href="/">
-          Главная
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} href="/advertisers">
-          Рекламодателям
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} href="/advertisers/orders">
-          Заказы
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} href="/advertisers/orders/2">
-          Заказ
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} href="/advertisers/orders/2/requests">
-          Заявки
-        </BreadcrumbLink>
-      </BreadcrumbItem>
+      {routes.map((route) => {
+        const isCurrentPage = pathname === route.href;
+        return (
+          <BreadcrumbItem
+            key={route.href}
+            isCurrentPage={isCurrentPage}
+            fontWeight={isCurrentPage ? 700 : 400}
+          >
+            <BreadcrumbLink
+              as={pathname === route.href ? Text : Link}
+              href={route.href}
+            >
+              {route.title}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        );
+      })}
     </Breadcrumb>
   );
 };
