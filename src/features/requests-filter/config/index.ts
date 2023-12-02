@@ -1,6 +1,8 @@
 import { RequestFilterOption } from '../types';
 
-export const requestFiltersOptions: RequestFilterOption[] = [
+type Statuses = '' | 'on_check' | 'approved' | 'rejected';
+
+export const requestFiltersOptions: RequestFilterOption<Statuses>[] = [
   {
     label: 'На проверке',
     value: 'on_check',
@@ -14,3 +16,5 @@ export const requestFiltersOptions: RequestFilterOption[] = [
     value: 'rejected',
   },
 ];
+
+export const DEFAULT_STATUS: Statuses = '';

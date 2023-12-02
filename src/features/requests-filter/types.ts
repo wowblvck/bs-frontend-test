@@ -1,4 +1,4 @@
-export type RequestFilterOption = {
-  value: string;
+export type RequestFilterOption<T> = {
+  value: T;
   label: string;
 };

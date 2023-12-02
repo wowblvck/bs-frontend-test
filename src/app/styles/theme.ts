@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { selectTheme } from './themes/select-theme';
 
 export const theme = extendTheme({
   styles: {
@@ -25,5 +26,8 @@ export const theme = extendTheme({
       800: '#06004e',
       900: '#02001f',
     },
+  },
+  components: {
+    Select: selectTheme,
   },
 });
