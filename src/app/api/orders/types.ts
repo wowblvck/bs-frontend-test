@@ -9,10 +9,11 @@ export type Statistics = {
 
 export type RequestData = {
   id: string;
+  logo: string;
   title: string;
   group: string;
   status: Status;
   price: number;
-  statistics: Statistics;
-  tags: string[];
+  stats: Statistics;
+  tags: string[][];
 };
