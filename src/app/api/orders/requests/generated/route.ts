@@ -15,7 +15,7 @@ const createRandomRequest = (): RequestData => {
     }),
     group: faker.lorem.word(),
     status: faker.helpers.arrayElement(['on_check', 'approved', 'rejected']),
-    price: faker.number.int({ min: 100, max: 1000 }),
+    price: faker.number.float({ min: 100, max: 1000 }),
     stats: {
       users: faker.number.int({ min: 3, max: 500 }),
       views: faker.number.int({ min: 3, max: 500 }),

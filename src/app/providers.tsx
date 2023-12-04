@@ -3,6 +3,7 @@
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 import React from 'react';
 import { theme } from './styles/theme';
 
@@ -22,7 +23,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     <CacheProvider>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
         </QueryClientProvider>
       </ChakraProvider>
     </CacheProvider>
