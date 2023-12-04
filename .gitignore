@@ -37,3 +37,9 @@ next-env.d.ts
 
 # idea
 .idea
+
+# environments
+.env
+.env.local
+.env.production
+.env.development
