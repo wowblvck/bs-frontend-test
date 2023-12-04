@@ -6,23 +6,45 @@ import { Pagination } from '@/shared/ui';
 import { RequestsItem } from './requests-item';
 import { useQuery } from '@tanstack/react-query';
 import { localApi } from '@/shared/api';
+import { SkeletonItem } from './skeleton-item';
 
 export const RequestsList = () => {
-  const { data: query } = useQuery({
-    queryKey: ['requests', 1],
-    queryFn: () => localApi.getRequests({ offset: 1, limit: 10 }),
+  const [page, setPage] = React.useState<number>(1);
+
+  const { data: query, isLoading } = useQuery({
+    queryKey: ['requests', page],
+    queryFn: () => localApi.getRequests({ offset: page, limit: 10 }),
   });
+
+  const handleChangePage = (page: number) => {
+    setPage(page);
+  };
+
+  const skeletonLoaders = Array.from({ length: 10 }, (_, k) => (
+    <SkeletonItem key={k} />
+  ));
 
   return (
     <Stack w="full" spacing={[5, 10]}>
       <Box bg="white" w="full" p={4} borderRadius={25}>
         <VStack w="full">
           <VStack w="full" spacing={3}>
-            {query?.data.map((item) => (
-              <RequestsItem item={item} key={item.id} />
-            ))}
+            {isLoading ? (
+              skeletonLoaders
+            ) : (
+              <>
+                {query?.data.map((item) => (
+                  <RequestsItem item={item} key={item.id} />
+                ))}
+              </>
+            )}
           </VStack>
-          <Pagination />
+          <Pagination
+            currentPage={page}
+            pageSize={10}
+            total={query?.totalCount ?? 1}
+            onChange={handleChangePage}
+          />
         </VStack>
       </Box>
       <Stack
