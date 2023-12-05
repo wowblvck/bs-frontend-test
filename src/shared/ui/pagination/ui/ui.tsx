@@ -7,21 +7,34 @@ type PaginationProps = {
   currentPage: number;
   pageSize: number;
   total: number;
-  onChange: (page: number) => void;
+  onChange?: (page: number) => void;
+  onNextPage?: () => void;
+  onPrevPage?: () => void;
 };
 
 export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   total,
   pageSize,
+  onNextPage,
+  onPrevPage,
   onChange,
 }) => {
   const totalPages = Math.ceil(total / pageSize);
 
-  const goToNextPage = () =>
-    currentPage !== totalPages && onChange(currentPage + 1);
+  const goToNextPage = () => {
+    if (currentPage !== totalPages) {
+      onNextPage && onNextPage();
+      onChange && onChange(currentPage + 1);
+    }
+  };
 
-  const goToPrevPage = () => currentPage !== 1 && onChange(currentPage - 1);
+  const goToPrevPage = () => {
+    if (currentPage !== 1) {
+      onPrevPage && onPrevPage();
+      onChange && onChange(currentPage - 1);
+    }
+  };
 
   return (
     <Stack

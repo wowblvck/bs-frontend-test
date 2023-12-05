@@ -4,46 +4,39 @@ import React from 'react';
 import { Box, Button, Stack, VStack } from '@chakra-ui/react';
 import { Pagination } from '@/shared/ui';
 import { RequestsItem } from './requests-item';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { localApi } from '@/shared/api';
-import { SkeletonItem } from './skeleton-item';
 
 export const RequestsList = () => {
   const [page, setPage] = React.useState<number>(1);
 
-  const { data: query, isLoading } = useQuery({
+  const { data: query, isPlaceholderData } = useQuery({
     queryKey: ['requests', page],
     queryFn: () => localApi.getRequests({ offset: page, limit: 10 }),
+    placeholderData: keepPreviousData,
   });
-
-  const handleChangePage = (page: number) => {
-    setPage(page);
-  };
-
-  const skeletonLoaders = Array.from({ length: 10 }, (_, k) => (
-    <SkeletonItem key={k} />
-  ));
 
   return (
     <Stack w="full" spacing={[5, 10]}>
       <Box bg="white" w="full" p={4} borderRadius={25}>
         <VStack w="full">
           <VStack w="full" spacing={3}>
-            {isLoading ? (
-              skeletonLoaders
-            ) : (
-              <>
-                {query?.data.map((item) => (
-                  <RequestsItem item={item} key={item.id} />
-                ))}
-              </>
-            )}
+            {query?.data.map((item) => (
+              <RequestsItem item={item} key={item.id} />
+            ))}
           </VStack>
           <Pagination
             currentPage={page}
             pageSize={10}
-            total={query?.totalCount ?? 1}
-            onChange={handleChangePage}
+            total={query?.totalCount || 1}
+            onPrevPage={() => {
+              setPage((prevPage) => prevPage - 1);
+            }}
+            onNextPage={() => {
+              if (!isPlaceholderData && query?.data) {
+                setPage((prevPage) => prevPage + 1);
+              }
+            }}
           />
         </VStack>
       </Box>
