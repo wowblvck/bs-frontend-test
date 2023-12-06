@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Statistics {
+  id      Int       @id @default(autoincrement())
+  users   Int
+  views   Int
+  male    Int
+  female  Int
+  request Request[]
+
+  @@map("stats")
+}
+
+model Request {
+  id           String     @id @default(uuid())
+  logo         String
+  title        String
+  group        String
+  status       Status     @default(on_check)
+  price        Float
+  stats        Statistics @relation(fields: [statisticsId], references: [id])
+  tags         Json
+  statisticsId Int        @map("statistics_id")
+
+  @@map("requests")
+}
+
+enum Status {
+  on_check
+  approved
+  rejected
+}

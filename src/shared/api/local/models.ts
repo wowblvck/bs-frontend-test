@@ -1,6 +1,7 @@
 export type Status = 'on_check' | 'approved' | 'rejected';
 
 export type Statistics = {
+  id: number;
   users: number;
   views: number;
   male: number;
@@ -15,7 +16,10 @@ export type RequestInfo = {
   status: Status;
   price: number;
   stats: Statistics;
-  tags: string[][];
+  tags: {
+    [x: string]: string[];
+  };
+  statisticsId: number;
 };
 
 export type RequestsData = {
