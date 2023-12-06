@@ -26,7 +26,7 @@ export const RequestsItem: React.FC<RequestsItemProps> = ({
   onSelectItem,
   isSelected,
 }) => {
-  const { stats, group, logo, price, title, status, tags: tagsArray } = item;
+  const { stats, group, logo, price, title, status, tags } = item;
   const { views, users, female, male } = stats;
 
   const convertToPercent = toPercent<Pick<Statistics, 'male' | 'female'>>({
@@ -101,7 +101,7 @@ export const RequestsItem: React.FC<RequestsItemProps> = ({
             </Stack>
           </Stack>
           <HStack flexWrap="wrap" gap={5}>
-            {tagsArray.map((tags, idx) => (
+            {Object.values(tags).map((tags, idx) => (
               <HStack key={idx} flexWrap="wrap">
                 {tags.map((tag, idx) => (
                   <Tag
