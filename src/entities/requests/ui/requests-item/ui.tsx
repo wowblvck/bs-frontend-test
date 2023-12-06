@@ -17,9 +17,15 @@ const textStyle = { color: '#797eb3', fontSize: 'sm' };
 
 type RequestsItemProps = {
   item: RequestInfo;
+  isSelected: boolean;
+  onSelectItem?: (item: RequestInfo) => void;
 };
 
-export const RequestsItem: React.FC<RequestsItemProps> = ({ item }) => {
+export const RequestsItem: React.FC<RequestsItemProps> = ({
+  item,
+  onSelectItem,
+  isSelected,
+}) => {
   const { stats, group, logo, price, title, status, tags: tagsArray } = item;
   const { views, users, female, male } = stats;
 
@@ -47,8 +53,10 @@ export const RequestsItem: React.FC<RequestsItemProps> = ({ item }) => {
         position="absolute"
         top={4}
         right={4}
+        isChecked={isSelected}
         defaultChecked={false}
         colorScheme="bs"
+        onChange={() => onSelectItem && onSelectItem(item)}
       />
       <Stack
         direction={['column', 'row']}
