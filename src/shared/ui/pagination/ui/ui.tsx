@@ -22,10 +22,13 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const totalPages = Math.ceil(total / pageSize);
 
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   const goToNextPage = () => {
     if (currentPage !== totalPages) {
       onNextPage && onNextPage();
       onChange && onChange(currentPage + 1);
+      scrollToTop();
     }
   };
 
@@ -33,6 +36,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     if (currentPage !== 1) {
       onPrevPage && onPrevPage();
       onChange && onChange(currentPage - 1);
+      scrollToTop();
     }
   };
 

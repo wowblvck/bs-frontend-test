@@ -20,13 +20,11 @@ export const RequestsList = () => {
   const { addRequest } = useAddRequest();
 
   const handleSubmit = async () => {
-    for (const id of ids) {
-      try {
-        await addRequest(id);
-      } catch {}
-    }
-    await queryClient.invalidateQueries({ queryKey: ['requests'] });
-    resetRequests();
+    await Promise.allSettled(ids.map((id) => addRequest(id))).then(() =>
+      queryClient
+        .invalidateQueries({ queryKey: ['requests'] })
+        .then(() => resetRequests())
+    );
   };
 
   return (

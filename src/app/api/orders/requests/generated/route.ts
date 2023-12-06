@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import { RequestData } from '@/app/api/orders/types';
-import { filePath } from '@/app/api/orders/config';
 import { faker } from '@faker-js/faker';
+import prisma from '@/prisma/client';
+import { Prisma } from '@prisma/client';
 
-const createRandomRequest = (): RequestData => {
+const createRandomRequest = (): Prisma.RequestCreateInput => {
   return {
-    id: faker.string.uuid(),
     title: faker.lorem.word(),
     logo: faker.image.urlLoremFlickr({
       category: 'logo',
@@ -17,26 +15,30 @@ const createRandomRequest = (): RequestData => {
     status: faker.helpers.arrayElement(['on_check', 'approved', 'rejected']),
     price: faker.number.float({ min: 100, max: 1000 }),
     stats: {
-      users: faker.number.int({ min: 3, max: 500 }),
-      views: faker.number.int({ min: 3, max: 500 }),
-      male: faker.number.int({ min: 3, max: 500 }),
-      female: faker.number.int({ min: 3, max: 500 }),
+      create: {
+        users: faker.number.int({ min: 3, max: 500 }),
+        views: faker.number.int({ min: 3, max: 500 }),
+        male: faker.number.int({ min: 3, max: 500 }),
+        female: faker.number.int({ min: 3, max: 500 }),
+      },
     },
-    tags: faker.helpers.arrayElements(
-      Array.from({ length: 10 }, () =>
-        faker.helpers.arrayElements(
-          Array.from({ length: 10 }, faker.lorem.word),
-          {
-            min: 1,
-            max: 3,
-          }
-        )
+    tags: {
+      ...faker.helpers.arrayElements(
+        Array.from({ length: 10 }, () =>
+          faker.helpers.arrayElements(
+            Array.from({ length: 10 }, faker.lorem.word),
+            {
+              min: 1,
+              max: 3,
+            }
+          )
+        ),
+        {
+          min: 1,
+          max: 5,
+        }
       ),
-      {
-        min: 1,
-        max: 5,
-      }
-    ),
+    },
   };
 };
 
@@ -45,12 +47,10 @@ export async function POST(request: NextRequest) {
   const size = request.nextUrl.searchParams.get('size');
 
   try {
-    const file = await fs
-      .access(filePath)
-      .then(() => true)
-      .catch(() => false);
+    const result: [{ count: number }] =
+      await prisma.$queryRaw`SELECT Count(id) FROM requests`;
 
-    if (file && rewrite !== 'y')
+    if (Object.hasOwn(result[0], 'count') && rewrite !== 'y') {
       return NextResponse.json(
         {
           success: false,
@@ -63,15 +63,25 @@ export async function POST(request: NextRequest) {
           status: 409,
         }
       );
+    }
+
+    if (rewrite === 'y') {
+      await prisma.$queryRaw`DELETE FROM requests`;
+      await prisma.$queryRaw`DELETE FROM stats`;
+    }
 
     const generatedData = Array.from(
       { length: size ? Number(size) : 100 },
       createRandomRequest
     );
 
-    await fs.writeFile(filePath, JSON.stringify(generatedData, null, 2), {
-      encoding: 'utf-8',
-    });
+    await Promise.all(
+      generatedData.map((data) =>
+        prisma.request.create({
+          data: data,
+        })
+      )
+    );
 
     return NextResponse.json(generatedData);
   } catch {

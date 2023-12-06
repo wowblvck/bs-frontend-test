@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import { RequestData } from '@/app/api/orders/types';
-import { filePath } from '@/app/api/orders/config';
+import prisma from '@/prisma/client';
 
 type AcceptParams = {
   params: {
@@ -13,29 +11,13 @@ export async function PUT(request: NextRequest, { params }: AcceptParams) {
   const id = params.id;
 
   try {
-    const existFile = await fs
-      .access(filePath)
-      .then(() => true)
-      .catch(() => false);
+    const requestData = await prisma.request.findFirst({
+      where: {
+        id,
+      },
+    });
 
-    if (!existFile)
-      return NextResponse.json(
-        {
-          success: false,
-          code: 404,
-          message: 'The database file does not exist!',
-        },
-        {
-          status: 404,
-        }
-      );
-
-    const file = await fs.readFile(filePath, 'utf8');
-    const requestsData: RequestData[] = JSON.parse(file);
-
-    const data = requestsData.find((request) => request.id === id);
-
-    if (!data)
+    if (!requestData)
       return NextResponse.json(
         {
           success: false,
@@ -47,7 +29,7 @@ export async function PUT(request: NextRequest, { params }: AcceptParams) {
         }
       );
 
-    if (data.status === 'approved')
+    if (requestData.status === 'approved')
       return NextResponse.json(
         {
           success: false,
@@ -59,11 +41,18 @@ export async function PUT(request: NextRequest, { params }: AcceptParams) {
         }
       );
 
-    data.status = 'approved';
-
-    return fs
-      .writeFile(filePath, JSON.stringify(requestsData, null, 2), 'utf8')
-      .then(() => NextResponse.json(data));
+    const updateRequest = await prisma.request.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'approved',
+      },
+      include: {
+        stats: true,
+      },
+    });
+    return NextResponse.json(updateRequest);
   } catch {
     return NextResponse.json(
       {
