@@ -4,17 +4,30 @@ import React from 'react';
 import { Box, Button, Stack, VStack } from '@chakra-ui/react';
 import { Pagination } from '@/shared/ui';
 import { RequestsItem } from './requests-item';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { localApi } from '@/shared/api';
+import { useAddRequest, useGetRequests, useSelectRequests } from '../lib';
+import { declension } from '@/shared/lib';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const RequestsList = () => {
+  const queryClient = useQueryClient();
   const [page, setPage] = React.useState<number>(1);
 
-  const { data: query, isPlaceholderData } = useQuery({
-    queryKey: ['requests', page],
-    queryFn: () => localApi.getRequests({ offset: page, limit: 10 }),
-    placeholderData: keepPreviousData,
-  });
+  const { ids, itemsCount, resetRequests, isRequestExist, onSelect } =
+    useSelectRequests([]);
+
+  const { data: query, isPlaceholderData } = useGetRequests(page);
+
+  const { addRequest } = useAddRequest();
+
+  const handleSubmit = async () => {
+    for (const id of ids) {
+      try {
+        await addRequest(id);
+      } catch {}
+    }
+    await queryClient.invalidateQueries({ queryKey: ['requests'] });
+    resetRequests();
+  };
 
   return (
     <Stack w="full" spacing={[5, 10]}>
@@ -22,7 +35,12 @@ export const RequestsList = () => {
         <VStack w="full">
           <VStack w="full" spacing={3}>
             {query?.data.map((item) => (
-              <RequestsItem item={item} key={item.id} />
+              <RequestsItem
+                item={item}
+                key={item.id}
+                isSelected={isRequestExist(item)}
+                onSelectItem={(item) => onSelect(item)}
+              />
             ))}
           </VStack>
           <Pagination
@@ -46,8 +64,17 @@ export const RequestsList = () => {
         ml={['unset', 'auto']}
         spacing={5}
       >
-        <Button variant="link">Сбросить</Button>
-        <Button colorScheme="bs">Выбрать 1 заявку</Button>
+        <Button variant="link" onClick={resetRequests}>
+          Сбросить
+        </Button>
+        <Button
+          colorScheme="bs"
+          isDisabled={itemsCount === 0}
+          onClick={handleSubmit}
+        >
+          Выбрать {itemsCount}{' '}
+          {declension(itemsCount, ['заявку', 'заявки', 'заявок'])}
+        </Button>
       </Stack>
     </Stack>
   );

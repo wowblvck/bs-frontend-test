@@ -61,9 +61,9 @@ export async function PUT(request: NextRequest, { params }: AcceptParams) {
 
     data.status = 'approved';
 
-    await fs.writeFile(filePath, JSON.stringify(requestsData, null, 2), 'utf8');
-
-    return NextResponse.json(data);
+    return fs
+      .writeFile(filePath, JSON.stringify(requestsData, null, 2), 'utf8')
+      .then(() => NextResponse.json(data));
   } catch {
     return NextResponse.json(
       {

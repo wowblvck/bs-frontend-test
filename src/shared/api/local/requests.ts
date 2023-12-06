@@ -18,3 +18,8 @@ export const getRequests = async (
     totalCount: totalCount,
   };
 };
+
+export const acceptRequest = async (id: string) => {
+  const res = await apiInstance.put<RequestInfo>(`${BASE_URL}/${id}/accept`);
+  return res.data;
+};
