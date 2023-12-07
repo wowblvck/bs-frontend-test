@@ -1,5 +1,5 @@
 import { apiInstance } from './base';
-import { RequestsData, RequestInfo } from './models';
+import { RequestInfo, RequestsData } from './models';
 
 const BASE_URL = '/api/orders';
 
@@ -11,12 +11,16 @@ type GetRequestsParams = {
 export const getRequests = async (
   params?: GetRequestsParams
 ): Promise<RequestsData> => {
-  const res = await apiInstance.get<RequestInfo[]>(BASE_URL, { params });
-  const totalCount = res.headers['x-total-count'];
-  return {
-    data: res.data,
-    totalCount: totalCount,
-  };
+  try {
+    const res = await apiInstance.get<RequestInfo[]>(BASE_URL, { params });
+    const totalCount = res.headers['x-total-count'];
+    return {
+      data: res.data,
+      totalCount: Number(totalCount),
+    };
+  } catch (error) {
+    throw 'Error';
+  }
 };
 
 export const acceptRequest = async (id: string) => {
