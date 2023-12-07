@@ -45,12 +45,27 @@ const createRandomRequest = (): Prisma.RequestCreateInput => {
 export async function POST(request: NextRequest) {
   const rewrite = request.nextUrl.searchParams.get('rewrite');
   const size = request.nextUrl.searchParams.get('size');
+  const remove = request.nextUrl.searchParams.get('remove');
 
   try {
+    const dropDatabase = async () => {
+      await prisma.$queryRaw`DELETE FROM requests`;
+      await prisma.$queryRaw`DELETE FROM stats`;
+    };
+
+    if (remove === 'y') {
+      await dropDatabase();
+      return NextResponse.json('Database successfully removed!');
+    }
+
     const result: [{ count: number }] =
       await prisma.$queryRaw`SELECT Count(id) FROM requests`;
 
-    if (Object.hasOwn(result[0], 'count') && rewrite !== 'y') {
+    if (
+      Object.hasOwn(result[0], 'count') &&
+      result[0].count > 0 &&
+      rewrite !== 'y'
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -65,10 +80,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (rewrite === 'y') {
-      await prisma.$queryRaw`DELETE FROM requests`;
-      await prisma.$queryRaw`DELETE FROM stats`;
-    }
+    if (rewrite === 'y') await dropDatabase();
 
     const generatedData = Array.from(
       { length: size ? Number(size) : 100 },
