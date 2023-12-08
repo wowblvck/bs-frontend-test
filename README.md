@@ -415,7 +415,7 @@ ORM:
 
 3. Этап 3:
 
-   [Видео презентация](https://youtube.com)
+   [Видео презентация](https://www.youtube.com/watch?v=uRUWLgG8qZQ)
 
 ---
 
