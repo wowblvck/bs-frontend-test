@@ -8,7 +8,16 @@ import React from 'react';
 import { theme } from './styles/theme';
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+          },
+        },
+      })
+  );
 
   return (
     <CacheProvider>
