@@ -8,8 +8,9 @@
     "start": "next start",
     "start:migrate": "pnpm prisma:migrate:prod && node server.js",
     "lint": "next lint",
-    "prisma:migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev",
-    "prisma:migrate:prod": "dotenv -e .env.production -- npx prisma migrate deploy",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate:dev": "pnpm prisma:generate && dotenv -e .env.development -- npx prisma migrate dev",
+    "prisma:migrate:prod": "pnpm prisma:generate && dotenv -e .env.production -- npx prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "dependencies": {

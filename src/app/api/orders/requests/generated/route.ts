@@ -95,7 +95,13 @@ export async function POST(request: NextRequest) {
       )
     );
 
-    return NextResponse.json(generatedData);
+    const data = await prisma.request.findMany({
+      include: {
+        stats: true,
+      },
+    });
+
+    return NextResponse.json(data);
   } catch {
     return NextResponse.json(
       {
